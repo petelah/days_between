@@ -11,14 +11,26 @@ You need to calculate the distance in whole days between two dates, counting onl
 When testing your solution, use the following sample data to demonstrate your code works:
 - a) 2/6/1983 to 22/6/1983 19 days
 - b) 4/7/1984 to 25/12/1984 173 days
-- c) 3/1/1989 to 3/8/1983 2036 days
+- c) 1/3/1989 to 3/8/1983 2036 days
   
 ### How to run:
 The easiest way to run this is to have golang 1.16+ installed and execute with:
 ```bash
+git clone git@github.com:petelah/days_between.git
+cd days_between
 go run cmd/app/main.go 2/6/1983 to 22/6/1983
 ```
 Replace the two dates above with dates of your choosing.
+
+### Run tests:
+Run from the project directory
+```bash
+go test ./cmd/app -v
+```
+
+### CI testing
+Continuous integration tests are run upon pushing to master branch.
+The test suite will run
 
 ### Improvements
 - ~~Add validation to check if the first date is before the second date.~~
