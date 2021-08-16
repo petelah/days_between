@@ -25,3 +25,4 @@ Replace the two dates above with dates of your choosing.
 - Error interfaces.
 - Multistage docker build so it can be run independent of OS (I mean even though golang is cross platform, but why not?).
 - Reduce complexity of overall application.
+- Unit tests.
