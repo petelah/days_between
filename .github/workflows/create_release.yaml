@@ -15,24 +15,17 @@ jobs:
       - name: Run tests
         run: go test ./cmd/app -v
 
-  releases-matrix:
-    name: Release Go Binary
+  releases-linux:
+    name: Release Go Binary - Linux/Amd64
     needs: test_suite
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, darwin]
-        goarch: [amd64]
-        exclude:
-          - goarch: "386"
-            goos: darwin
-
     steps:
     - uses: actions/checkout@v2
     - uses: wangyoucao577/go-release-action@v1.19
       with:
         github_token: ${{ secrets.RELEASE_TOKEN }}
-        goos: ${{ matrix.goarch }}
+        goos: linux
+        goarch: amd64
         project_path: "./cmd/app"
         binary_name: "days-between"
         extra_files: README.md
