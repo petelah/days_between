@@ -14,7 +14,20 @@ When testing your solution, use the following sample data to demonstrate your co
 - c) 1/3/1989 to 3/8/1983 2036 days
   
 ### How to run:
-The easiest way to run this is to have golang 1.16+ installed and execute with:
+The Easiest way is to download the binary that matches your system architecture and run from the command line.
+
+__Usage:__
+
+Linux/MacOS:
+```bash
+./days_between 2/6/1983 to 22/6/1983
+```
+Windows:
+```bash
+days_between.exe
+```
+
+Run code on your local machine:
 ```bash
 git clone git@github.com:petelah/days_between.git
 cd days_between
@@ -42,7 +55,7 @@ Tests will run on every push to master.
 Tests will also run and before releases and releases being created will depend on test suite passing.
   
 
-### Improvements
+### Improvements/todo
 - ~~Add validation to check if the first date is before the second date.~~
 - ~~Error handling.~~
 - Multistage docker build so it can be run independent of OS (I mean even though golang is cross platform, but why not?).
