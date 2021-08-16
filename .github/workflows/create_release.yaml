@@ -17,6 +17,7 @@ jobs:
 
   releases-matrix:
     name: Release Go Binary
+    needs: test_suite
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +25,7 @@ jobs:
         goarch: ["386", amd64]
         exclude:
           - goarch: "386"
-            good: darwin
+            goos: darwin
 
     steps:
     - uses: actions/checkout@v2
