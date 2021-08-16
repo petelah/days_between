@@ -68,6 +68,7 @@ func initDate(inputDate string, validDates map[int][]int) (*date, error) {
 	return d, nil
 }
 
+// daysBetween calculates the days between the two dates given
 func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, error) {
 	validDaysAndMonths := validDates
 
@@ -95,7 +96,8 @@ func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, err
 			validDaysAndMonths[2][1] = 28
 		}
 
-		if firstDate.year == secondDate.year && firstDate.month == secondDate.month && firstDate.day == secondDate.day {
+		// Case for exiting the loops when dates match
+		if firstDate == secondDate {
 			dayCount--
 			break
 		}

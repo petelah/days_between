@@ -24,7 +24,7 @@ Linux/MacOS:
 ```
 Windows:
 ```bash
-days_between.exe
+days_between.exe 2/6/1983 to 22/6/1983
 ```
 
 Run code on your local machine:
