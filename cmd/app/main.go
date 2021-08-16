@@ -1,11 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"os"
+	"strconv"
+	"strings"
 )
 
 const minYear = 1900
 const maxYear = 2999
+const usage = "usage: [command] <date> to <date>. ie: ./main 2/6/1983 to 22/6/1983"
 
 type date struct {
 	day int
@@ -25,108 +30,34 @@ func isLeapYear(year int) bool {
 	return false
 }
 
-func strNumToInt(num rune, multiplier int) int {
-	return multiplier * int(byte(num)-'0')
-}
-
-func splitDate(date string) []int {
-	var strSlice []string
-	returnIntSlice := []int{}
-	lastIdx := 0
-	slashCount := 0
-	for idx, element := range date {
-		if byte(element) == 47 {
-			if slashCount <= 1 {
-				slashCount += 1
-				strSlice = append(strSlice, date[lastIdx:idx])
-				lastIdx = idx+1
-			}
-			if slashCount == 2 {
-				strSlice = append(strSlice, date[lastIdx:])
-			}
-		}
-	}
-	
-	numStore := 0
-	for _, element := range strSlice{
-		if len(element) > 1 {
-			// Calculate days and months
-			for dateIdx, i := range element{
-				switch dateIdx {
-				case 0:
-					if byte(i) == 48 {
-						continue
-					} else {
-						numStore = numStore + strNumToInt(i, 10)
-					}
-				case 1:
-					numStore = numStore + strNumToInt(i, 1)
-				}
-			}
-			// Calculate years
-			if len(element) == 4 {
-				numStore = 0
-				for yearIdx, i := range element{
-					switch yearIdx {
-					// 1000x
-					case 0:
-						numStore = numStore + strNumToInt(i, 1000)
-					// 100x
-					case 1:
-						numStore = numStore + strNumToInt(i, 100)
-					// 10x
-					case 2:
-						numStore = numStore + strNumToInt(i, 10)
-					// 1x
-					case 3:
-						numStore = numStore + strNumToInt(i, 1)
-					}
-				}
-			}
-		returnIntSlice = append(returnIntSlice, numStore)
-		} else {
-			numStore = numStore + strNumToInt(rune(element[0]), 1)
-			returnIntSlice = append(returnIntSlice, numStore)
-		}
-		numStore = 0
-	}
-
-	return returnIntSlice
-}
-
 // initDate - will verify and init a new date structure via constructor pattern
-func initDate(inputDate string) *date {
+func initDate(inputDate string, validDates map[int][]int) (*date, error) {
+	strSlice := strings.Split(inputDate, "/")
 	// Split date - maybe verify here and pass error up
-	intDateSlice := splitDate(inputDate)
+	var intDateSlice []int
+	for _, element := range strSlice {
+		intFromStr, strConvErr := strconv.Atoi(element)
+		if strConvErr != nil {
+			return nil, fmt.Errorf("invalid string input")
+		}
+		intDateSlice = append(intDateSlice, intFromStr)
+	}
 
 	// Map valid days and months
-	validDaysAndMonths := map[int][]int{
-		1: {1, 31},
-		2: {1, 28},
-		3: {1, 31},
-		4: {1, 30},
-		5: {1, 31},
-		6: {1, 30},
-		7: {1, 31},
-		8: {1, 31},
-		9: {1, 30},
-		10: {1, 31},
-		11: {1, 30},
-		12: {1, 31},
-	}
+	validDaysAndMonths := validDates
 
 	if isLeapYear(intDateSlice[2]) {
 		validDaysAndMonths[2][1] = 29
 	}
 	if intDateSlice[2] <= minYear || intDateSlice[2] >= maxYear {
-		panic("invalid year input")
+		return nil, fmt.Errorf("invalid year input. Must be between 1900 & 2999")
 	} 
 	_, okMonth := validDaysAndMonths[intDateSlice[1]]
 	if !okMonth {
-		panic("invalid month input")
+		return nil, fmt.Errorf("invalid month input. Input range 1-12")
 	}
 	if intDateSlice[0] < validDaysAndMonths[intDateSlice[1]][0] || intDateSlice[0] > validDaysAndMonths[intDateSlice[1]][1] {
-		panic("invalid day input")
+		return nil, fmt.Errorf("invalid day input. Input range 1-31")
 	}
 
 	d := new(date)
@@ -134,42 +65,48 @@ func initDate(inputDate string) *date {
 	d.month = intDateSlice[1]
 	d.year = intDateSlice[2]
 
-	return d
+	return d, nil
 }
 
-func daysBetween(firstDate, secondDate date) int {
-	// Map valid days and months
-	validDaysAndMonths := map[int][]int{
-		1: {1, 31},
-		2: {1, 28},
-		3: {1, 31},
-		4: {1, 30},
-		5: {1, 31},
-		6: {1, 30},
-		7: {1, 31},
-		8: {1, 31},
-		9: {1, 30},
-		10: {1, 31},
-		11: {1, 30},
-		12: {1, 31},
+func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, error) {
+	validDaysAndMonths := validDates
+
+	// Check firstDate is smaller than secondDate, if so swap them
+	if firstDate.year <= secondDate.year {
+		if firstDate.month > secondDate.month {
+			firstDate, secondDate = secondDate, firstDate
+		}
+		if firstDate.month <= secondDate.month {
+			if firstDate.day > secondDate.day {
+				firstDate, secondDate = secondDate, firstDate
+			}
+		}
+	} else {
+		// Base case where firstDate.year > secondDate.year
+		firstDate, secondDate = secondDate, firstDate
 	}
 
 	dayCount := 0
 	for {
+		// Check leap year
+		if isLeapYear(firstDate.year) {
+			validDaysAndMonths[2][1] = 29
+		} else {
+			validDaysAndMonths[2][1] = 28
+		}
+
 		if firstDate.year == secondDate.year && firstDate.month == secondDate.month && firstDate.day == secondDate.day {
 			dayCount--
 			break
 		}
-		// Check leap year
-		if isLeapYear(firstDate.year) {
-			validDaysAndMonths[2][1] = 29
-		}
 		firstDate.day++
+
 		// Increment month & reset day if last day is end of the month else increment day if day is over limit of month
 		if firstDate.day > validDaysAndMonths[firstDate.month][1] {
 			firstDate.month++
 			firstDate.day = 1
 		}
+
 		// Increment year
 		if firstDate.month > len(validDaysAndMonths) {
 			firstDate.year++
@@ -178,12 +115,47 @@ func daysBetween(firstDate, secondDate date) int {
 		dayCount++
 	}
 
-	return dayCount
+	return dayCount, nil
 }
 
 func main() {
+	// Map valid dates as lookup table
+	validDaysAndMonths := map[int][]int{
+		1: {1, 31},
+		2: {1, 28},
+		3: {1, 31},
+		4: {1, 30},
+		5: {1, 31},
+		6: {1, 30},
+		7: {1, 31},
+		8: {1, 31},
+		9: {1, 30},
+		10: {1, 31},
+		11: {1, 30},
+		12: {1, 31},
+	}
+
 	args := os.Args
-	firstDate := initDate(args[1])
-	secondDate := initDate(args[3])	
-	println(daysBetween(*firstDate, *secondDate))
+
+	// Validate args with simple length test
+	if len(args) < 4 {
+		log.Fatal(fmt.Sprintf("invalid input error. %s", usage))
+	}
+
+	firstDate, firstDateErr := initDate(args[1], validDaysAndMonths)
+	if firstDateErr != nil {
+		log.Fatal(fmt.Sprintf("date input error: %s\n%s", firstDateErr, usage))
+	}
+
+	secondDate, secondDateErr := initDate(args[3], validDaysAndMonths)
+	if secondDateErr != nil {
+		log.Fatal(fmt.Sprintf("date input error: %s\n%s", secondDateErr, usage))
+	}
+
+	days, daysErr := daysBetween(*firstDate, *secondDate, validDaysAndMonths)
+	if daysErr != nil {
+		log.Fatal(fmt.Sprintf("error calculating difference in dates: %s\n%s", daysErr, usage))
+	}
+
+	fmt.Printf("%d days", days)
 }
