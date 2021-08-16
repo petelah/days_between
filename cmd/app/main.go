@@ -13,15 +13,15 @@ const maxYear = 2999
 const usage = "usage: [command] <date> to <date>. ie: ./main 2/6/1983 to 22/6/1983"
 
 type date struct {
-	day int
+	day   int
 	month int
-	year int
+	year  int
 }
 
 // isLeapYear - checks if year is leap year
 func isLeapYear(year int) bool {
-	if year % 4 == 0 {
-		if year % 100 == 0 && year % 400 != 0 {
+	if year%4 == 0 {
+		if year%100 == 0 && year%400 != 0 {
 			return false
 		}
 		return true
@@ -51,7 +51,7 @@ func initDate(inputDate string, validDates map[int][]int) (*date, error) {
 	}
 	if intDateSlice[2] <= minYear || intDateSlice[2] >= maxYear {
 		return nil, fmt.Errorf("invalid year input. Must be between 1900 & 2999")
-	} 
+	}
 	_, okMonth := validDaysAndMonths[intDateSlice[1]]
 	if !okMonth {
 		return nil, fmt.Errorf("invalid month input. Input range 1-12")
@@ -121,15 +121,15 @@ func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, err
 func main() {
 	// Map valid dates as lookup table
 	validDaysAndMonths := map[int][]int{
-		1: {1, 31},
-		2: {1, 28},
-		3: {1, 31},
-		4: {1, 30},
-		5: {1, 31},
-		6: {1, 30},
-		7: {1, 31},
-		8: {1, 31},
-		9: {1, 30},
+		1:  {1, 31},
+		2:  {1, 28},
+		3:  {1, 31},
+		4:  {1, 30},
+		5:  {1, 31},
+		6:  {1, 30},
+		7:  {1, 31},
+		8:  {1, 31},
+		9:  {1, 30},
 		10: {1, 31},
 		11: {1, 30},
 		12: {1, 31},
