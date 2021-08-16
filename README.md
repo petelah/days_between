@@ -30,7 +30,17 @@ go test ./cmd/app -v
 
 ### CI testing
 Continuous integration tests are run upon pushing to master branch.
-The test suite will run
+The test suite will run tests on:
+- Date constraints 
+- - Year between 1900 & 2999
+- - Months between 1 & 12
+- - Days between 1 & 31
+- Leap years
+
+Tests will run on every push to master.
+
+Tests will also run and before releases and releases being created will depend on test suite passing.
+  
 
 ### Improvements
 - ~~Add validation to check if the first date is before the second date.~~
