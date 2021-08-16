@@ -11,6 +11,6 @@ jobs:
       with:
         go-version: 1.16.x
     - name: Checkout repo
-      uses: actions/chckout@v2
+      uses: actions/checkout@v2
     - name: Run tests
       run: go test ./..
