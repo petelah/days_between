@@ -13,4 +13,4 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
     - name: Run tests
-      run: go test ./cmd/app
+      run: go test ./cmd/app -v
