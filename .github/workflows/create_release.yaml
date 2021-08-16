@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux, windows, darwin]
-        goarch: amd64
+        goos: [linux, darwin]
+        goarch: [amd64]
         exclude:
           - goarch: "386"
             goos: darwin
