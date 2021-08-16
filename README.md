@@ -61,4 +61,5 @@ Tests will also run and before releases and releases being created will depend o
 - Multistage docker build so it can be run independent of OS (I mean even though golang is cross platform, but why not?).
 - ~~Reduce complexity of overall application.~~
 - ~~Unit tests.~~
-- Create releases.
+- ~~Create releases.~~
+- Add linting checks to ci pipeline
