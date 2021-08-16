@@ -21,8 +21,9 @@ go run cmd/app/main.go 2/6/1983 to 22/6/1983
 Replace the two dates above with dates of your choosing.
 
 ### Improvements
-- Add validation to check if the first date is before the second date.
-- Error interfaces.
+- ~~Add validation to check if the first date is before the second date.~~
+- ~~Error handling.~~
 - Multistage docker build so it can be run independent of OS (I mean even though golang is cross platform, but why not?).
-- Reduce complexity of overall application.
-- Unit tests.
+- ~~Reduce complexity of overall application.~~
+- ~~Unit tests.~~
+- Create releases.
