@@ -21,6 +21,7 @@ func Test_initDate(t *testing.T) {
 		{name: "Fail on date out of range: year too low", args: args{inputDate: "2/6/1899"}, want: nil, wantErr: true},
 		{name: "Fail on date out of range: month too high", args: args{inputDate: "2/16/2020"}, want: nil, wantErr: true},
 		{name: "Fail on date out of range: day too high", args: args{inputDate: "32/12/2020"}, want: nil, wantErr: true},
+		{name: "Fail invalid date formatting '-' used instead of '/'", args: args{inputDate: "32-12-2020"}, want: nil, wantErr: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -63,7 +64,6 @@ func Test_daysBetween(t *testing.T) {
 	type args struct {
 		firstDate  date
 		secondDate date
-		validDates map[int][]int
 	}
 	tests := []struct {
 		name    string
@@ -75,6 +75,7 @@ func Test_daysBetween(t *testing.T) {
 		{name: "Pass case b 173 days", args: args{firstDate: date{day: 4, month: 7, year: 1984}, secondDate: date{day: 25, month: 12, year: 1984}}, want: 173, wantErr: false},
 		{name: "Pass case c 2036 days", args: args{firstDate: date{day: 1, month: 3, year: 1989}, secondDate: date{day: 3, month: 8, year: 1983}}, want: 2036, wantErr: false},
 		{name: "Pass include leap year", args: args{firstDate: date{day: 2, month: 6, year: 1999}, secondDate: date{day: 2, month: 6, year: 2002}}, want: 1095, wantErr: false},
+		{name: "Pass case 0 days between", args: args{firstDate: date{day: 1, month: 1, year: 1999}, secondDate: date{day: 1, month: 1, year: 1999}}, want: 1095, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

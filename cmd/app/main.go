@@ -48,6 +48,9 @@ func isLeapYear(year int) bool {
 // initDate - will verify and init a new date structure via constructor pattern
 func initDate(inputDate string) (*date, error) {
 	strSlice := strings.Split(inputDate, "/")
+	if len(strSlice) != 3 {
+		return nil, fmt.Errorf("invalid string input")
+	}
 	// Split date - maybe verify here and pass error up
 	var intDateSlice []int
 	for _, element := range strSlice {
@@ -58,8 +61,10 @@ func initDate(inputDate string) (*date, error) {
 		intDateSlice = append(intDateSlice, intFromStr)
 	}
 
+	validDates := validDaysAndMonths
+
 	if isLeapYear(intDateSlice[2]) {
-		validDaysAndMonths[2][1] = 29
+		validDates[2][1] = 29
 	}
 	if intDateSlice[2] <= minYear || intDateSlice[2] >= maxYear {
 		return nil, fmt.Errorf("invalid year input. Must be between 1900 & 2999")
@@ -98,16 +103,22 @@ func daysBetween(firstDate, secondDate date) (int, error) {
 	}
 
 	dayCount := 0
+
+	validDates := validDaysAndMonths
+
 	for {
 		// Check leap year
 		if isLeapYear(firstDate.year) {
-			validDaysAndMonths[2][1] = 29
+			validDates[2][1] = 29
 		} else {
-			validDaysAndMonths[2][1] = 28
+			validDates[2][1] = 28
 		}
 
 		// Case for exiting the loops when dates match
 		if firstDate == secondDate {
+			if dayCount == 0 {
+				break
+			}
 			dayCount--
 			break
 		}
