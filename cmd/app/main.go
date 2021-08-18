@@ -153,5 +153,5 @@ func main() {
 		log.Fatal(fmt.Sprintf("error calculating difference in dates: %s\n%s", daysErr, usage))
 	}
 
-	fmt.Printf("%d days", days)
+	fmt.Printf("%d days between %d/%d/%d and %d/%d/%d\n", days, firstDate.day, firstDate.month, firstDate.year, secondDate.day, secondDate.month, secondDate.year)
 }
