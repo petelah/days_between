@@ -18,6 +18,21 @@ type date struct {
 	year  int
 }
 
+var validDaysAndMonths = map[int][]int{
+	1:  {1, 31},
+	2:  {1, 28},
+	3:  {1, 31},
+	4:  {1, 30},
+	5:  {1, 31},
+	6:  {1, 30},
+	7:  {1, 31},
+	8:  {1, 31},
+	9:  {1, 30},
+	10: {1, 31},
+	11: {1, 30},
+	12: {1, 31},
+}
+
 // isLeapYear - checks if year is leap year
 func isLeapYear(year int) bool {
 	if year%4 == 0 {
@@ -31,7 +46,7 @@ func isLeapYear(year int) bool {
 }
 
 // initDate - will verify and init a new date structure via constructor pattern
-func initDate(inputDate string, validDates map[int][]int) (*date, error) {
+func initDate(inputDate string) (*date, error) {
 	strSlice := strings.Split(inputDate, "/")
 	// Split date - maybe verify here and pass error up
 	var intDateSlice []int
@@ -42,9 +57,6 @@ func initDate(inputDate string, validDates map[int][]int) (*date, error) {
 		}
 		intDateSlice = append(intDateSlice, intFromStr)
 	}
-
-	// Map valid days and months
-	validDaysAndMonths := validDates
 
 	if isLeapYear(intDateSlice[2]) {
 		validDaysAndMonths[2][1] = 29
@@ -69,9 +81,7 @@ func initDate(inputDate string, validDates map[int][]int) (*date, error) {
 }
 
 // daysBetween calculates the days between the two dates given
-func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, error) {
-	validDaysAndMonths := validDates
-
+func daysBetween(firstDate, secondDate date) (int, error) {
 	// Check firstDate is smaller than secondDate, if so swap them
 	if firstDate.year <= secondDate.year {
 		if firstDate.month > secondDate.month {
@@ -121,22 +131,6 @@ func daysBetween(firstDate, secondDate date, validDates map[int][]int) (int, err
 }
 
 func main() {
-	// Map valid dates as lookup table
-	validDaysAndMonths := map[int][]int{
-		1:  {1, 31},
-		2:  {1, 28},
-		3:  {1, 31},
-		4:  {1, 30},
-		5:  {1, 31},
-		6:  {1, 30},
-		7:  {1, 31},
-		8:  {1, 31},
-		9:  {1, 30},
-		10: {1, 31},
-		11: {1, 30},
-		12: {1, 31},
-	}
-
 	args := os.Args
 
 	// Validate args with simple length test
@@ -144,17 +138,17 @@ func main() {
 		log.Fatal(fmt.Sprintf("invalid input error. %s", usage))
 	}
 
-	firstDate, firstDateErr := initDate(args[1], validDaysAndMonths)
+	firstDate, firstDateErr := initDate(args[1])
 	if firstDateErr != nil {
 		log.Fatal(fmt.Sprintf("date input error: %s\n%s", firstDateErr, usage))
 	}
 
-	secondDate, secondDateErr := initDate(args[3], validDaysAndMonths)
+	secondDate, secondDateErr := initDate(args[3])
 	if secondDateErr != nil {
 		log.Fatal(fmt.Sprintf("date input error: %s\n%s", secondDateErr, usage))
 	}
 
-	days, daysErr := daysBetween(*firstDate, *secondDate, validDaysAndMonths)
+	days, daysErr := daysBetween(*firstDate, *secondDate)
 	if daysErr != nil {
 		log.Fatal(fmt.Sprintf("error calculating difference in dates: %s\n%s", daysErr, usage))
 	}
