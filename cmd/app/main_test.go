@@ -90,3 +90,21 @@ func Test_daysBetween(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark_daysBetween(b *testing.B) {
+	firstDate := date {
+		day: 1,
+		month: 2,
+		year: 1900,
+	}
+
+	secondDate := date {
+		day: 20,
+		month: 2,
+		year: 2998,
+	}
+
+	for i := 0; i < b.N; i++ {
+		daysBetween(firstDate, secondDate)
+	}
+}
